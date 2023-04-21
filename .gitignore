@@ -1,0 +1,7 @@
+#IntelliJ
+/.idea/
+.venv
+resources.json
+.vscode
+*.log
+__pycache__
