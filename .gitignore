@@ -5,4 +5,6 @@ resources.json
 .vscode
 *.log
 __pycache__
-/config/database.cfg
+app/celerybeat-schedule
+app/db.sqlite3
+app/crowscrape/static/*
