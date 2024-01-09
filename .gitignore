@@ -8,3 +8,4 @@ __pycache__
 app/celerybeat-schedule
 app/db.sqlite3
 app/crowscrape/static/*
+.env

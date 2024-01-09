@@ -1,20 +1,52 @@
 /* Add this CSS to your style file or use inline styles */
 header {
-    background-color: #f2f2f2;
+    background-color: #202020;
     padding: 10px;
-    text-align: left;
+    font-size: 0;
 }
 
 header a {
-    margin: 0 10px;
+    margin: 0 0px;
     text-decoration: none;
     color: #fff;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: 0px;
     background-color: #3BB143;
     transition: background-color 0.3s ease;
 }
 
+/* Style for square buttons */
+.header-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    width: justify; /* Adjust button width */
+    height: 50px; /* Adjust button height */
+    background-color: #3BB143; /* Button background color */
+    margin-right: 0; /* Reset margin */
+    text-align: center;
+    line-height: 50px; /* Center text vertically */
+    text-decoration: none;
+    color: #fff; /* Button text color */
+    font-size: 16px; /* Restore font size */
+}
+/* Hover effect for buttons */
+.header-btn:hover {
+    background-color: #ff6600; /* Adjust hover background color */
+    color: #fff; /* Adjust hover text color */
+}
+
 header a:hover {
     background-color: #378f39;
+}
+body {
+    background-color: #202020;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Example styles for links */
+a {
+    color: #8ab4f8; /* Adjust link color */
+    transition: background-color 0.3s ease;
 }

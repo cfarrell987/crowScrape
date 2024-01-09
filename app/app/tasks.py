@@ -7,7 +7,7 @@ from .views import track_price
 import redis
 from django.test import RequestFactory
 @shared_task
-def update_prices_daily():
+def update_prices():
     items = Item.objects.all()
 
     for item in items:
@@ -37,12 +37,13 @@ def process_products():
     print("Starting Task")
     r = redis.StrictRedis(host='localhost', port=6379, db=0)  # Connect to Redis
     i=0
+    category = r.smembers('category')
     # Get new URLs from Redis
     urls_bytes = r.smembers('new_urls')  # Assuming URLs are stored in a Redis set
     new_urls = [url.decode('utf-8') for url in urls_bytes]
     for url in new_urls:
         request_factory = RequestFactory()
-        payload = {'url': url}  
+        payload = {'url': url, 'category': category}  
         print(payload)
         result = request_factory.post('/track_price/', payload)
         print(result)  # Output the result (for demonstration purposes)
@@ -55,3 +56,4 @@ def process_products():
 
     if i < 1:
         r.delete('new_urls')  # Remove the 'new_urls' key from Redis
+        r.delete('category')

@@ -13,18 +13,25 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import redis
+import environ
+
+root = environ.Path(__file__)
+env = environ.Env()
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+SITE_ROOT = root()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7s4b&by_i2z$rf7g)1zu_d%4tg&w+pun=nddr+v(bl*$lz_6o('
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=False)
+TEMPLATE_DEBUG = DEBUG
+
 
 ALLOWED_HOSTS = []
 
@@ -75,13 +82,10 @@ WSGI_APPLICATION = 'crowscrape.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {'default': env.db('DATABASE_URL')}
 
+# REDIS
+CACHES = {'default': env.cache('REDIS_CACHE_URL')}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -115,7 +119,8 @@ USE_TZ = True
 
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
-STATIC_URL = '/static/'
+
+STATIC_URL = env.str('STATIC_URL', default='static/')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -128,12 +133,12 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 from datetime import datetime, timedelta
 
 CELERY_BEAT_SCHEDULE = {
-    'update-prices-every-day': {
-        'task': 'app.tasks.update_prices_daily',
-        'schedule': timedelta(days=1),  # Run the task daily
+    'update-prices-hourly': {
+        'task': 'app.tasks.update_prices',
+        'schedule': timedelta(hours=1),  # Run the task hourly
     },
     'process-bulk': {
         'task': 'app.tasks.process_products',
-        'schedule': timedelta(seconds=30),
+        'schedule': timedelta(minutes=3),
     }
 }

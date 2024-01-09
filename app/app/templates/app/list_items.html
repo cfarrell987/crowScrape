@@ -1,0 +1,49 @@
+<head>
+    {% load static %}
+    <title>Items List</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}"> <!-- Link to your CSS file -->    </head>
+<header>
+    <a href="{% url 'home' %}" class ="header-btn">Home</a>
+    <a href="{% url 'track_price' %}" class ="header-btn">Track Price</a>
+    <a href="{% url 'item_price_graph' %}" class ="header-btn">Item Price Graph</a>
+    <a href="{% url 'list_items' %}" class ="header-btn">Item List</a>
+    <a href="{% url 'admin:index' %}" class ="header-btn">Admin</a>
+
+</header>
+<table>
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>URL</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in page_obj %}
+            <tr>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.price.price }}</td>
+                <td>{{ item.item_url }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination links -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>

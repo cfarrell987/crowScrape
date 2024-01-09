@@ -8,3 +8,4 @@ celery
 redis
 matplotlib
 plotly
+django-environ
