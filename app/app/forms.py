@@ -3,6 +3,7 @@ from .models import Item
 
 
 class ItemPriceGraphForm(forms.Form):
+    item_category = forms.ChoiceField(label="Select Category", required=False)
     item_id = forms.ChoiceField(label="Select Item", required=False)
     time_range = forms.ChoiceField(
         label="Select a Time Range", initial=24, required=False
@@ -19,10 +20,14 @@ class ItemPriceGraphForm(forms.Form):
         items = Item.objects.all()  # Replace YourModel with your actual model
         self.fields["item_id"].choices = [(item.id, item.item_name) for item in items]
         self.fields["time_range"].choices = ItemPriceGraphForm.TIME_CHOICES
+        # Set field for category make sure we are only getting unique categories
+        self.fields["item_category"].choices = [
+            (item.category, item.category) for item in items.distinct("category")
+        ]
 
 
 """
-BulkTrackForm is a form that allows users to enter a catagory page and track all items within that catagory. 
+BulkTrackForm is a form that allows users to enter a catagory page and track all items within that catagory.
 
 """
 

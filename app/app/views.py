@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 from .forms import ItemPriceGraphForm, BulkTrackForm
 from django.views.generic import FormView
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -170,6 +171,18 @@ def item_price_graph(request):
         context = {"form": form, "items": items, "plot_data": plot_data}
         return render(request, "app/item_price_graph.html", context)
     return render(request, "app/item_price_graph.html", {"form": form, "items": items})
+
+
+def get_items_by_category(request):
+    category = request.GET.get("category")
+
+    # Fetch items based on the selected category
+    items = Item.objects.filter(category=category)
+
+    # Create a dictionary of items in the format {item_id: item_name}
+    items_dict = {item.id: item.item_name for item in items}
+
+    return JsonResponse({"items": items_dict})
 
 
 def list_items(request):
