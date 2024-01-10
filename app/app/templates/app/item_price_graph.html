@@ -4,12 +4,13 @@
     {% load static %}
     <head>
         <title>Item Price Graph</title>
-        <link rel="stylesheet" href="{% static 'style.css' %}"> <!-- Link to your CSS file -->    </head>
+        <link rel="stylesheet" href="{% static 'style.css' %}">    </head>
         <header>
             <a href="{% url 'home' %}" class ="header-btn">Home</a>
             <a href="{% url 'track_price' %}" class ="header-btn">Track Price</a>
             <a href="{% url 'item_price_graph' %}" class ="header-btn">Item Price Graph</a>
             <a href="{% url 'list_items' %}" class ="header-btn">Item List</a>
+            <a href="{% url 'bulk_track' %}" class ="header-btn">Bulk Track</a>
             <a href="{% url 'admin:index' %}" class ="header-btn">Admin</a>
 
         </header>
@@ -24,6 +25,5 @@
         <!-- Display the graph using the base64 encoded data -->
         <img src="data:image/png;base64,{{ plot_data }}" alt="Price History Graph">
     </div>
-    <a href="{% url 'home' %}">Back to Home</a>
 </body>
 </html>

@@ -1,8 +1,7 @@
-<!-- home.html -->
 <!DOCTYPE html>
 <html>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"> <!-- Link to your CSS file -->
     <head>
         <title>CrowScrape</title>
         </head>
@@ -14,9 +13,15 @@
             <a href="{% url 'list_items' %}" class ="header-btn">Item List</a>
             <a href="{% url 'bulk_track' %}" class ="header-btn">Bulk Track</a>
             <a href="{% url 'admin:index' %}" class ="header-btn">Admin</a>
+
         </header>
     </body>
 <body>
-    <h1>Welcome to CrowScrape</h1>
-</body>
-</html>
+    <h2>
+    Add a Category
+    </h2>
+<form method="get">
+    {% csrf_token %}
+    {{ form }} 
+    <input type="submit" value="Process Products">
+</form>
