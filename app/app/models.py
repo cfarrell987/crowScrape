@@ -10,7 +10,7 @@ class Item(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.item_name
+        return str(self.item_name)
 
 
 class Price(models.Model):

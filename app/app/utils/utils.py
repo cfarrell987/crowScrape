@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.test import RequestFactory
 import requests
 from bs4 import BeautifulSoup
 import redis
@@ -13,7 +12,7 @@ def collect_products(url, category):
     urls_added = 0
     while True:
         paginated_url = f"{url}?p={page}&product_list_limit=36"
-        response = requests.get(paginated_url)
+        response = requests.get(paginated_url, timeout=10)
         print(f"Fetching page {page} from {paginated_url}")
         print(f"Status code: {response.status_code}")
         if response.status_code == 200:
@@ -26,7 +25,7 @@ def collect_products(url, category):
 
             if not urls:
                 paginated_url = f"{url}&p={page}&product_list_limit=36"
-                response = requests.get(paginated_url)
+                response = requests.get(paginated_url, timeout=10)
                 print(response.status_code)
                 soup = BeautifulSoup(response.content, "html.parser")
                 urls = [
@@ -47,7 +46,8 @@ def collect_products(url, category):
                 break
 
             r.sadd("category", category)
-            # TODO: this counter is still broken, figure out why the logic isn't stopping the loop before exceeding the max urls
+            # TODO: this counter is still broken, figure out why the logic
+            # isn't stopping the loop before exceeding the max urls
             if urls_added <= (max_urls + 1):
                 for u in urls:
                     print(
@@ -78,7 +78,7 @@ def track_price(request):
         item_name = request.POST.get("item_name")
         category = request.POST.get("category")
         # Scraping the webpage
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 
         if not item_name:

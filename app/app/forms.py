@@ -1,7 +1,7 @@
-from django import forms
-from .models import Item
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django import forms
+from .models import Item
 
 
 class ItemPriceGraphForm(forms.Form):
@@ -18,36 +18,28 @@ class ItemPriceGraphForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        super(ItemPriceGraphForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         items = Item.objects.all()  # Replace YourModel with your actual model
         self.fields["item_id"].choices = [(item.id, item.item_name) for item in items]
         self.fields["time_range"].choices = ItemPriceGraphForm.TIME_CHOICES
-        # Set field for category make sure we are only getting unique categories
+        # Set field for category make sure we are only getting unique
+        # categories
         self.fields["item_category"].choices = [
             (item.category, item.category) for item in items.distinct("category")
         ]
 
 
-"""
-
-BulkTrackForm is a form that allows users to enter a catagory page and track all items within that catagory.
-
-"""
-
-
 class BulkTrackForm(forms.Form):
+    """BulkTrackForm is a form that allows users to enter a catagory page and track all
+    items within that catagory."""
+
     url = forms.CharField(label="Enter URL", required=False)
     category = forms.CharField(label="Enter Category", required=False)
 
 
-"""
-
-SignupForm is a form that allows users to signup for an account.
-
-"""
-
-
 class SignUpForm(UserCreationForm):
+    """SignupForm is a form that allows users to signup for an account."""
+
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(
@@ -68,7 +60,7 @@ class SignUpForm(UserCreationForm):
         )
 
     def save(self, commit=True):
-        user = super(SignUpForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()

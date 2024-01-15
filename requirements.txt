@@ -9,3 +9,7 @@ redis
 matplotlib
 plotly
 django-environ
+pylint
+autopep8
+psycopg
+pre-commit

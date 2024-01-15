@@ -1,22 +1,20 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from matplotlib import dates
-from .models import Item, Price
+import io
+import base64
 import requests
+from datetime import datetime, timedelta
+from django.shortcuts import render
+from matplotlib import dates
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 import matplotlib.pyplot as plt
-import io
-import base64
 import redis
-from datetime import datetime, timedelta
 from django.core.paginator import Paginator
-from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm
-from django.views.generic import FormView
 from django.http import JsonResponse
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+
+from .models import Item, Price
+from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm
 
 # Create your views here.
 
@@ -68,8 +66,6 @@ def bulk_track(request):
             return render(
                 request, "app/success.html", {"message": "Price tracked successfully!"}
             )
-        else:
-            print("Error")
     return render(request, "app/bulk_track.html", {"form": form})
 
 
@@ -82,7 +78,7 @@ def track_price(request):
         )  # Optional: if you want to get item name from the form
         category = request.POST.get("category")
         # Scraping the webpage
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 
         if not item_name:

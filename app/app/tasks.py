@@ -1,12 +1,10 @@
 from celery import shared_task
-
-
-from .models import Item, Price
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 import redis
 from django.test import RequestFactory
+
+from .models import Item, Price
 from .utils.utils import collect_products, track_price
 
 
@@ -16,7 +14,7 @@ def update_prices():
 
     for item in items:
         # Scraping the webpage
-        response = requests.get(item.item_url)
+        response = requests.get(item.item_url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Extracting price and currency information
@@ -44,7 +42,8 @@ def process_products():
     i = 0
     category = r.smembers("category")
     # Get new URLs from Redis
-    urls_bytes = r.smembers("new_urls")  # Assuming URLs are stored in a Redis set
+    # Assuming URLs are stored in a Redis set
+    urls_bytes = r.smembers("new_urls")
     new_urls = [url.decode("utf-8") for url in urls_bytes]
     for url in new_urls:
         request_factory = RequestFactory()
@@ -55,7 +54,8 @@ def process_products():
         response = track_price(result)
         print(response)
         if response.status_code == 200:
-            r.srem("new_urls", url)  # Remove the URL from the Redis set 'new_urls'
+            # Remove the URL from the Redis set new_urls
+            r.srem("new_urls", url)
         else:
             i = +1
 

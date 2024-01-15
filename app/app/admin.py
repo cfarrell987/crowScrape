@@ -2,13 +2,12 @@ from django.contrib import admin
 from .models import Item, Price
 
 
-"""
-Create an inline for the Price model to display the price history of an item. Within the item panel, we can see the price history of the item.
-
-"""
-
-
 class PriceInline(admin.TabularInline):
+    """
+    Create an inline for the Price model to display the price history of an item.
+    Within the item panel, we can see the price history of the item.
+    """
+
     model = Price
     extra = 0
     fields = ("price", "currency", "timestamp")

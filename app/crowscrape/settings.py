@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
-import redis
 import environ
 
 root = environ.Path(__file__)
@@ -140,10 +140,9 @@ STATIC_URL = env.str("STATIC_URL", default="static/")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-### Celery
+# Celery
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 
-from datetime import datetime, timedelta
 
 CELERY_BEAT_SCHEDULE = {
     "update-prices-hourly": {
