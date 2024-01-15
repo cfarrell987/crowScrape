@@ -11,6 +11,7 @@
             <th>Item Name</th>
             <th>Price</th>
             <th>URL</th>
+            <th>Added By</th>
         </tr>
     </thead>
     <!-- To Fix price display -->
@@ -20,6 +21,7 @@
                 <td>{{ item.item_name }}</td>
                 <td>{{ item.price.price }}</td>
                 <td>{{ item.item_url }}</td>
+                <td>{{ item.added_by.username }}</td>
             </tr>
         {% endfor %}
     </tbody>

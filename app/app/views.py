@@ -139,7 +139,10 @@ def track_price(request):
                     },
                 )
             item, created = Item.objects.get_or_create(
-                item_name=item_name, item_url=url, category=category
+                item_name=item_name,
+                item_url=url,
+                category=category,
+                added_by=request.user,
             )
             Price.objects.create(item=item, price=price, currency=currency)
             return render(
