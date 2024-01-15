@@ -20,4 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        python tools/pylint.py --path ./app --threshold 8.5
+        python ./tools/pylint.py --path ./app --threshold 8.5
