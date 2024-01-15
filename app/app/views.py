@@ -63,7 +63,12 @@ def track_price(request):
                     "error.html",
                     {"message": "Failed to extract item name from the webpage."},
                 )
-
+        if len(item_name) > 500:
+            return render(
+                request,
+                "error.html",
+                {"message": "Item name exceeds the maximum length of 500 characters."},
+            )
         # Extracting price and currency information
         price_meta = soup.find("meta", itemprop="price")
         currency_meta = soup.find("meta", itemprop="priceCurrency")
@@ -91,6 +96,16 @@ def track_price(request):
 
         if price is not None and currency is not None:
             # Save to database
+            # TODO Look into if django can handle this
+            # TODO Check if item already exists and skip if it does
+            if len(item_name) > 500:
+                return render(
+                    request,
+                    "error.html",
+                    {
+                        "message": "Item name exceeds the maximum length of 500 characters."
+                    },
+                )
             item, created = Item.objects.get_or_create(
                 item_name=item_name, item_url=url, category=category
             )
@@ -187,6 +202,7 @@ def get_items_by_category(request):
 
 def list_items(request):
     items = Item.objects.all()
+    # TODO Fix price query to display price in the list
     price = Price.objects.select_related()
     paginator = Paginator(items, 10)
     page_number = request.GET.get("page")
