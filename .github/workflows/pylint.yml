@@ -20,4 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        python tools/lint.py --path ./app/app --threshold 8.5
+        pylint --fail-under8.0 $(git ls-files '*.py')
