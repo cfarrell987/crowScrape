@@ -11,17 +11,48 @@ import base64
 import redis
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator
-from .forms import ItemPriceGraphForm, BulkTrackForm
+from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm
 from django.views.generic import FormView
 from django.http import JsonResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
+@login_required
 def home(request):
     return render(request, "app/home.html")
 
 
+def signup(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.full_clean()
+            form.save()
+            # email = form.cleaned_data.get("email")
+            # username = form.cleaned_data.get("email")
+            # raw_password = form.cleaned_data.get("password1")
+            # user = authenticate(username=username, password=raw_password)
+            # form.save()
+            # login(request, user)
+            return render(
+                request, "app/success.html", {"message": "User created successfully!"}
+            )
+    else:
+        form = SignUpForm()
+    return render(request, "app/signup.html", {"form": form})
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return render(request, "app/success.html", {"message": "Logged out successfully!"})
+
+
+@login_required
 def bulk_track(request):
     form = BulkTrackForm(request.GET)
     print(request.GET)
@@ -42,6 +73,7 @@ def bulk_track(request):
     return render(request, "app/bulk_track.html", {"form": form})
 
 
+@login_required
 def track_price(request):
     if request.method == "POST":
         url = request.POST.get("url")
@@ -123,6 +155,7 @@ def track_price(request):
     return render(request, "app/track_price.html")
 
 
+@login_required
 def item_price_graph(request):
     # Replace this with your logic to fetch available items
     items = Item.objects.all()
@@ -188,6 +221,7 @@ def item_price_graph(request):
     return render(request, "app/item_price_graph.html", {"form": form, "items": items})
 
 
+@login_required
 def get_items_by_category(request):
     category = request.GET.get("category")
 
@@ -200,6 +234,7 @@ def get_items_by_category(request):
     return JsonResponse({"items": items_dict})
 
 
+@login_required
 def list_items(request):
     items = Item.objects.all()
     # TODO Fix price query to display price in the list

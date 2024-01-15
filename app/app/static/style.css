@@ -6,6 +6,7 @@ header {
 }
 
 header a {
+    display: inline-block;
     margin: 0 0px;
     text-decoration: none;
     color: #fff;
@@ -14,6 +15,36 @@ header a {
     background-color: #3BB143;
     transition: background-color 0.3s ease;
 }
+
+header form {
+    display: inline-block;
+    margin: 0 0px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-decoration: none;
+    color: #fff;
+    padding: 0px 12px;
+    border-radius: 0px;
+    padding-bottom: 16px;
+    background-color: #3BB143;
+    transition: background-color 0.3s ease;
+}
+
+/* .form-btn {
+    display: inline-block;
+    margin: 0 0px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-decoration: none;
+    color: #fff;
+    padding: 0px 12px;
+    border-radius: 0px;
+    padding-bottom: 16px;
+    background-color: #3BB143;
+    transition: background-color 0.3s ease;
+} */
 
 /* Style for square buttons */
 .header-btn {
@@ -29,6 +60,28 @@ header a {
     color: #fff; /* Button text color */
     font-size: 16px; /* Restore font size */
 }
+
+.form-btn {
+    display: inline-block;
+    position: absolute;
+    margin: 0 0px;
+    right: 0;
+    top: 0;
+    padding: 8px 12px;
+    background-color: #3BB143;
+    margin-right: 0;
+    text-align: center;
+    line-height: 50px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.form-btn:hover {
+    background-color: #ff6600;
+}
 /* Hover effect for buttons */
 .header-btn:hover {
     background-color: #ff6600; /* Adjust hover background color */
@@ -38,6 +91,7 @@ header a {
 header a:hover {
     background-color: #378f39;
 }
+
 body {
     background-color: #202020;
     color: #fff;

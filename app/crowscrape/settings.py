@@ -62,7 +62,7 @@ ROOT_URLCONF = "crowscrape.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "app/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -103,8 +103,22 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-
+# Password hashing
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 

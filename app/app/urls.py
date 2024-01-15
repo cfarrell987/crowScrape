@@ -1,5 +1,6 @@
 from django.urls import path
 from app import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -11,5 +12,11 @@ urlpatterns = [
         "get_items_by_category/",
         views.get_items_by_category,
         name="get_items_by_category",
+    ),
+    path("signup/", views.signup, name="signup"),
+    path(
+        "logout/",
+        views.logout_view,
+        name="logout",
     ),
 ]
