@@ -1,5 +1,6 @@
 import io
 import base64
+from django.urls import reverse
 import requests
 from datetime import datetime, timedelta
 from django.shortcuts import render
@@ -9,12 +10,12 @@ from django.shortcuts import render
 import matplotlib.pyplot as plt
 import redis
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 from .models import Item, Price
-from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm
+from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm, UserSettingsForm
 
 # Create your views here.
 
@@ -48,6 +49,39 @@ def signup(request):
 def logout_view(request):
     logout(request)
     return render(request, "app/success.html", {"message": "Logged out successfully!"})
+
+
+@login_required
+def UserSettings(UpdateView):
+    model = UserSettings
+    queryset = UserSettings.objects.all()
+    form = UserSettingsForm
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSettings, self).get_context_data(**kwargs)
+        context["settings_form"] = UserSettingsForm(
+            instance=self.request.user.user_settings,
+            initial={
+                "username": self.request.user.username,
+                "first_name": self.request.user.first_name,
+                "last_name": self.request.user.last_name,
+                "notification": self.request.user.user_settings.notification,
+            },
+        )
+        return context
+
+    def form_valid(self, form):
+        settings = form.save(commit=False)
+        user = settings.user
+        user.first_name = form.cleaned_data["first_name"]
+        user.last_name = form.cleaned_data["last_name"]
+        user.save()
+        settings.save()
+        return HttpResponseRedirect(
+            reverse("users:settings", kwargs={"pk": self.get_object().id})
+        )
+
+    return render(UpdateView, "app/settings.html", {"form": form})
 
 
 @login_required

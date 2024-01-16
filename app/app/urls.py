@@ -18,4 +18,9 @@ urlpatterns = [
         views.logout_view,
         name="logout",
     ),
+    path(
+        "settings/",
+        views.UserSettings,
+        name="settings",
+    ),
 ]

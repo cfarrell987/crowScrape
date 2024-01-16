@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Item
+from django.contrib.auth.forms import UserChangeForm
+from .models import Item, UserSettings
 
 
 class ItemPriceGraphForm(forms.Form):
@@ -62,6 +63,22 @@ class SignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
+        user.notification = self.cleaned_data["notification"]
+        UserSettings.objects.create(user=user, notification=user.notification)
         if commit:
             user.save()
         return user
+
+
+# Add the missing import for UserUpdateForm
+class UserSettingsForm(forms.ModelForm):
+    """UserSettingsForm is a form that allows users to change their settings."""
+
+    username = forms.CharField(max_length=30)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    notification = forms.BooleanField(required=False)
+
+    class Meta:
+        model = UserSettings
+        fields = ("notification",)

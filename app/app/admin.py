@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Item, Price
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from .models import Item, Price, UserSettings
 
 
 class PriceInline(admin.TabularInline):
@@ -20,6 +22,13 @@ class PriceInline(admin.TabularInline):
         return obj.timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
     timestamp_display.short_description = "Timestamp"
+
+
+class UserSettingsInLine(admin.StackedInline):
+    model = UserSettings
+    can_delete = False
+    verbose_name_plural = "User Settings"
+    fk_name = "user"
 
 
 @admin.register(Item)
@@ -43,3 +52,20 @@ class ItemAdmin(admin.ModelAdmin):
 class PriceAdmin(admin.ModelAdmin):
     list_display = ("price", "timestamp", "item")
     list_filter = ("timestamp", "item__item_name")
+
+
+class UserAdmin(admin.ModelAdmin):
+    inlines = [UserSettingsInLine]
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "is_active",
+    )
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
