@@ -89,6 +89,15 @@ def track_price(request):
         )  # Optional: if you want to get item name from the form
         category = request.POST.get("category")
         # Scraping the webpage
+        # Check if the URL already exists in the database
+        if Item.objects.filter(item_url=url).exists():
+            status_code = 500
+            return render(
+                request,
+                "500.html",
+                {"message": "The URL already exists in the database."},
+                status=status_code,
+            )
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 

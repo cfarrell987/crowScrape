@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Item(models.Model):
     item_name = models.CharField(max_length=500)
-    item_url = models.URLField()
+    item_url = models.URLField(unique=True)
     category = models.CharField(max_length=100)  # Add the category field
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
