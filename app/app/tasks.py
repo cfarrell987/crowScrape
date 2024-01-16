@@ -5,7 +5,7 @@ import redis
 from django.test import RequestFactory
 
 from .models import Item, Price
-from .utils.utils import collect_products, track_price
+from .utils.utils import collect_products, track_price, uri_validator
 
 
 @shared_task
@@ -14,7 +14,14 @@ def update_prices():
 
     for item in items:
         # Scraping the webpage
-        response = requests.get(item.item_url, timeout=10)
+
+        # Create validation for the url to ensure it is valid and not malicious
+
+        if uri_validator(item.item_url):
+            url = item.item_url
+        else:
+            continue
+        response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Extracting price and currency information

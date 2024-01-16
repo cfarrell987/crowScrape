@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Item, Price
 from .forms import ItemPriceGraphForm, BulkTrackForm, SignUpForm
+from .utils.utils import uri_validator
 
 # Create your views here.
 
@@ -72,7 +73,17 @@ def bulk_track(request):
 @login_required
 def track_price(request):
     if request.method == "POST":
-        url = request.POST.get("url")
+        raw_url = request.POST.get("url")
+        if uri_validator(raw_url):
+            url = raw_url
+        else:
+            status_code = 500
+            return render(
+                request,
+                "500.html",
+                {"message": "Invalid URL. Please enter a valid URL."},
+                status=status_code,
+            )
         item_name = request.POST.get(
             "item_name"
         )  # Optional: if you want to get item name from the form
@@ -86,16 +97,20 @@ def track_price(request):
             if name_element:
                 item_name = name_element.text.strip()
             else:
+                status_code = 500
                 return render(
                     request,
-                    "error.html",
+                    "500.html",
                     {"message": "Failed to extract item name from the webpage."},
+                    status=status_code,
                 )
         if len(item_name) > 500:
+            status_code = 500
             return render(
                 request,
-                "error.html",
+                "500.html",
                 {"message": "Item name exceeds the maximum length of 500 characters."},
+                status=status_code,
             )
         # Extracting price and currency information
         price_meta = soup.find("meta", itemprop="price")
@@ -129,7 +144,7 @@ def track_price(request):
             if len(item_name) > 500:
                 return render(
                     request,
-                    "error.html",
+                    "500.html",
                     {
                         "message": "Item name exceeds the maximum length of 500 characters."
                     },
@@ -147,7 +162,7 @@ def track_price(request):
         else:
             return render(
                 request,
-                "error.html",
+                "500.html",
                 {"message": "Failed to extract price or currency from the webpage."},
             )
 
@@ -243,3 +258,15 @@ def list_items(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, "app/list_items.html", {"page_obj": page_obj})
+
+
+def error_404(request, exception):
+    return render(request, "404.html", {"message": "Page not found."}, status=404)
+
+
+def error_500(request):
+    return render(request, "500.html", {"message": "Server error."}, status=500)
+
+
+def error_403(request, exception):
+    return render(request, "403.html", {"message": "Access forbidden."}, status=403)

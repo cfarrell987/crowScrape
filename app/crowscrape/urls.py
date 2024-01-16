@@ -22,3 +22,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("", include("app.urls")),
 ]
+
+handler404 = "app.views.error_404"
+handler500 = "app.views.error_500"
+handler403 = "app.views.error_403"
