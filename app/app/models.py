@@ -21,3 +21,8 @@ class Price(models.Model):
 
     def __str__(self):
         return f"{self.item.item_name}"
+
+
+class UserSettings(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    notification = models.BooleanField(default=False)
