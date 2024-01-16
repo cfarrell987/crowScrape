@@ -2,6 +2,8 @@ from django.shortcuts import render
 import requests
 from bs4 import BeautifulSoup
 import redis
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from app.models import Item, Price
 
 
@@ -134,3 +136,12 @@ def track_price(request):
             )
 
     return render(request, "app/track_price.html")
+
+
+def uri_validator(url):
+    val = URLValidator()
+    try:
+        val(url)
+    except ValidationError as e:
+        return False
+    return True
