@@ -13,3 +13,4 @@ pylint
 autopep8
 psycopg
 pre-commit
+psycopg2-binary==2.8.6
